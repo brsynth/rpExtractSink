@@ -6,11 +6,16 @@ RetroPath2 sink generator
 
 ## Input
 
-* **TO_FILL**: (<type>) TO_FILL
+Required:
+* **-input_sbml**: (string) Path to the input SBML file
 
-## Ouput
+Addtional information:
+* **-remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
+* **-compartment_id**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
 
-* **TO_FILL**: (<type>) TO_FILL
+## Output
+
+* **-output_sink**: (string) Path to the output csv file
 
 
 ## Install
@@ -48,8 +53,8 @@ python -m rpextractsink
 
 ## Authors
 
-* ****
-* Melchior du Lac, Thomas Duigou, Joan Hérisson
+* **Melchior du Lac**
+* Thomas Duigou, Joan Hérisson
 
 ## License
 
