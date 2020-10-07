@@ -10,11 +10,15 @@ npm init
 npm install --silent node-jq --save
 
 # Read informations from package.json
-name=$(./node_modules/node-jq/bin/jq ".name"  package.json)
-descr=$(./node_modules/node-jq/bin/jq ".description"  package.json)
-url=$(./node_modules/node-jq/bin/jq ".repository.url"  package.json)
-authors=$(./node_modules/node-jq/bin/jq ".author"  package.json)
+name=$(./node_modules/node-jq/bin/jq -r ".name"  package.json)
+descr=$(./node_modules/node-jq/bin/jq -r ".description"  package.json)
+url=$(./node_modules/node-jq/bin/jq -r ".repository.url"  package.json)
+authors=$(./node_modules/node-jq/bin/jq -r ".author"  package.json)
 read -p 'Corresponding author(s) ('"$authors"'): ' corr_authors
+if [ -z "$corr_authors" ]
+then
+      corr_authors=$authors
+fi
 
 # escape srings
 name_e=$(printf '%s\n' "$name" | sed -e 's/[\/&]/\\&/g')
@@ -58,9 +62,8 @@ sed -i "" "s/TO_FILL/$name/" .github/workflows/publish.yml
 git remote set-url origin $url
 echo custom.sh >> .gitignore
 
-# # Commitizen
-# npm init
-# npm set init.author.name
+# Commitizen
+commitizen init cz-conventional-changelog --save-dev --save-exact
 
 echo
 echo Customisation is completed!

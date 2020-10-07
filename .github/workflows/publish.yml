@@ -47,7 +47,7 @@ jobs:
         sleep 30
     - name: Get module from PyPi
       run: |
-        conda skeleton pypi TO_FILL
+        conda skeleton pypi rpextractsink
     # - name: Customize recipe
     #   run: |
     #     sed -i.bck '/\ \ run\:/a \ \ \ \ - rdkit'    rp2paths/meta.yaml
@@ -61,7 +61,7 @@ jobs:
     #       --add channels cyclus
     - name: Build for Python ${{ matrix.python-version }}
       run: |
-        conda-build --python ${{ matrix.python-version }} TO_FILL
+        conda-build --python ${{ matrix.python-version }} rpextractsink
     - name: Upload package
       env:
         CONDA_USERNAME: ${{ secrets.CONDA_USERNAME }}
