@@ -7,15 +7,15 @@ RetroPath2 sink generator
 ## Input
 
 Required:
-* **-input_sbml**: (string) Path to the input SBML file
+* **input_sbml**: (string) Path to the input SBML file
 
-Addtional information:
-* **-remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
-* **-compartment_id**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
+Optional:
+* **--remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
+* **--compartment_id**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
 
 ## Output
 
-* **-output_sink**: (string) Path to the output csv file
+* **output_sbml**: (string) Path to the output csv file
 
 
 ## Install
