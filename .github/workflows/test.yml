@@ -6,14 +6,14 @@ name: Test (full)
 on:
 
   push:
-    branches: [ main, master ]
+    branches: [ master, main ]
     paths:
       - '**'
       - '!RELEASE.md'
       - '!LICENSE'
       - '!README.md'
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
 
