@@ -6,7 +6,7 @@ name: Test (full)
 on:
 
   push:
-    branches: [ master ]
+    branches: [ main, master ]
     paths:
       - '**'
       - '!RELEASE.md'

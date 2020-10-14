@@ -6,7 +6,7 @@ name: Check code
 on:
 
   push:
-    branches: [ dev, master ]
+    branches: [ dev, main, master ]
     paths:
       - '**'
       - '!RELEASE.md'
