@@ -48,17 +48,17 @@ jobs:
     - name: Get module from PyPi
       run: |
         conda skeleton pypi rpextractsink
-    # - name: Customize recipe
-    #   run: |
-    #     sed -i.bck '/\ \ run\:/a \ \ \ \ - rdkit'    rp2paths/meta.yaml
+    - name: Customize recipe
+      run: |
+        sed -i.bck '/\ \ run\:/a \ \ \ \ - rdkit'    rpextractsink/meta.yaml
     #     sed -i.bck '/\ \ run\:/a \ \ \ \ - graphviz' rp2paths/meta.yaml
     #     sed -i.bck '/\ \ run\:/a \ \ \ \ - java-jre' rp2paths/meta.yaml
-    # - name: Add channels
-    #   run: |
-    #     conda config \
-    #       --add channels conda-forge \
-    #       --add channels rdkit \
-    #       --add channels cyclus
+    - name: Add channels
+      run: |
+        conda config \
+          --add channels brsynth \
+          --add channels conda-forge \
+          --add channels bioconda
     - name: Build for Python ${{ matrix.python-version }}
       run: |
         conda-build --python ${{ matrix.python-version }} rpextractsink

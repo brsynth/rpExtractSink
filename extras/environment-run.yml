@@ -7,3 +7,4 @@ dependencies:
   - brs_libs
   - cobra==0.16
   - timeout-decorator
+  - rdkit
