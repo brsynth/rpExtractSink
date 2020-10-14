@@ -6,14 +6,11 @@ name: Check code
 on:
 
   push:
-    branches: [ dev, main, master ]
+    branches: [ dev, master, main ]
     paths:
-      - '**'
-      - '!RELEASE.md'
-      - '!LICENSE'
-      - '!README.md'
+      - 'rpextractsink/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
 
