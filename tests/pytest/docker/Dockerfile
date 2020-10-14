@@ -2,7 +2,7 @@ ARG IMAGE
 FROM ${IMAGE}
 
 COPY tests/pytest/environment.yml environment-test.yml
-COPY extras/environment.yml       environment-run.yml
+COPY extras/environment-run.yml .
 
 RUN conda update -n base -c defaults conda
 RUN conda install -y -c conda-forge conda-merge
