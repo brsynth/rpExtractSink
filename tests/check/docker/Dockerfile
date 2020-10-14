@@ -1,16 +1,18 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-ARG PKG
-COPY tests/check/requirements.txt requirements-test.txt
-COPY extras/requirements.txt requirements-src.txt
-# install requirements
-RUN python3 -m pip install --upgrade pip \
- && python3 -m pip install --no-cache-dir --upgrade -r requirements-test.txt \
- && python3 -m pip install --no-cache-dir --upgrade -r requirements-src.txt
+COPY tests/check/environment.yml environment-test.yml
+COPY extras/environment-run.yml .
+
+RUN conda update -n base -c defaults conda
+RUN conda install -y -c conda-forge conda-merge
+RUN conda-merge environment-run.yml environment-test.yml > environment.yml
+RUN conda env create -f environment.yml
 
 ARG HOME
-WORKDIR ${HOME}
+WORKDIR ${HOME}/tests
 
+ADD tests .
+
+ARG PKG
 ADD ${PKG} ${PKG}
-ADD tests tests

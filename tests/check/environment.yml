@@ -1,0 +1,6 @@
+name: check
+channels:
+  - conda-forge
+dependencies:
+  - flake8
+  - bandit
