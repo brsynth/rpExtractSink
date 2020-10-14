@@ -1,20 +1,18 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-RUN conda install -y -c rdkit rdkit \
- && conda install -y -c conda-forge graphviz \
- && conda install -y -c cyclus java-jre
+COPY tests/pytest/environment.yml environment-test.yml
+COPY extras/environment.yml       environment-run.yml
 
-ARG PKG
-COPY tests/pytest/requirements.txt requirements-test.txt
-COPY extras/requirements.txt requirements-src.txt
-# install requirements
-RUN python3 -m pip install --upgrade pip \
- && python3 -m pip install --no-cache-dir --upgrade -r requirements-test.txt \
- && python3 -m pip install --no-cache-dir --upgrade -r requirements-src.txt
+RUN conda update -n base -c defaults conda
+RUN conda install -y -c conda-forge conda-merge
+RUN conda-merge environment-run.yml environment-test.yml > environment.yml
+RUN conda env create -f environment.yml
 
 ARG HOME
 WORKDIR ${HOME}/tests
 
 ADD tests .
-ADD src ${PKG}
+
+ARG PKG
+ADD ${PKG} ${PKG}

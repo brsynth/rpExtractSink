@@ -6,6 +6,6 @@ Created on Oct 5 2020
 """
 
 
-from rpextractsink.rpextractsink import rpextractsink, build_args_parser
+from rpextractsink.rpExtractSink import rpExtractSink, build_args_parser
 
-__all__ = ["rpextractsink", "build_args_parser"]
+__all__ = ["rpExtractSink", "build_args_parser"]

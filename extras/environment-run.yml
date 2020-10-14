@@ -1,0 +1,9 @@
+name: run
+channels:
+  - brsynth
+  - conda-forge
+  - bioconda
+dependencies:
+  - brs_libs
+  - cobra==0.16
+  - timeout-decorator

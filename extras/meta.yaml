@@ -1,0 +1,45 @@
+{% from 'read_infos' import read %}
+{% set data = read() %}
+
+package:
+  name: {{ data['name'] }}
+  version: {{ data['version'] }}
+
+# package:
+#   name: rpextractsink
+#   version: {{ setup }}
+#
+# source:
+#   path: ../
+#
+# build:
+#   noarch: python
+#   number: {{ environ.get('BUILD_NUMBER', 0) }}
+
+# requirements:
+#   # host:
+#   #   - brs_utils
+#   #   - colored
+#   #   - credisdict
+#   #   - numpy
+#   #   - pandas
+#   #   - python
+#   #   - python-libsbml
+#   #   - redis
+#   #   - requests
+#   run:
+#     # dependencies are defined in setup.py
+#     {% for dep in data.get('install_requires') %}
+#     - {{ dep.lower() }}
+#     {% endfor %}
+
+# test:
+#   imports:
+#     - brs_libs
+
+# about:
+#   home: {{ setup.get('url') }}
+#   summary: {{ setup.get('description') }}
+#
+# extra:
+#   {{ setup }}

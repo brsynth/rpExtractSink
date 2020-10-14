@@ -21,7 +21,7 @@ jobs:
         python-version: '3.x'
     - name: Install dependencies
       run: |
-        pip install setuptools wheel twine
+        python -m pip install setuptools wheel twine pyyaml
     - name: Build
       run: |
         python setup.py sdist bdist_wheel

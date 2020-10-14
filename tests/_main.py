@@ -15,7 +15,7 @@ class Main(TestCase):
     __test__ = False
 
     def test(self):
-        # print(self.__class__.__name__)
+        print(self.__class__.__name__)
         if self.__class__.__name__ == 'Main':
             self.skipTest('Generic Class')
         else:
@@ -112,4 +112,4 @@ class Main(TestCase):
 
     @staticmethod
     def _run_module_func(func, args):
-        func(args)
+        func(*list(vars(args).values()))
