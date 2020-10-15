@@ -20,7 +20,8 @@ requirements:
     - brs_libs==0.2.0
     - cobra==0.16
     - timeout-decorator==0.4.1
-    - rdkit==2020.03.6
+    - rdkit
+    # ==2020.03.6
 
 test:
   source_files:
