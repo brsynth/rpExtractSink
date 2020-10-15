@@ -38,7 +38,7 @@ about:
   home: https://github.com/brsynth/rpextractsink
   summary: {{ data['description'] }}
   license: {{ data.get('license') }}
-  license_file: LICENSE.md
+  license_file: LICENSE
 
 extra:
   recipe-maintainers:
