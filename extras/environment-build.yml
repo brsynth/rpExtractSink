@@ -1,5 +1,0 @@
-name: build
-channels:
-  - conda-forge
-dependencies:
-  - pyyaml
