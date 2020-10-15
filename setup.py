@@ -1,6 +1,4 @@
 from setuptools import setup
-# from distutils.core import setup, Extension
-# import distutils.command.bdist_conda
 
 _readme = 'README.md'
 
