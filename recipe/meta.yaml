@@ -1,7 +1,8 @@
+{% set name = "rpextractsink" %}
 {% set data = load_setup_py_data() %}
 
 package:
-  name: rpextractsink
+  name: {{ name|lower }}
   version: {{ data['version'] }}
 
 source:
@@ -26,16 +27,16 @@ test:
   source_files:
     - tests
   imports:
-    - rpextractsink
+    - {{ name|lower }}
   requires:
     - pytest
   commands:
-    - python -m rpextractsink --help
+    - python -m {{ name|lower }} --help
     - cd tests
     - pytest -v
 
 about:
-  home: https://github.com/brsynth/rpextractsink
+  home: https://github.com/brsynth/{{ name|lower }}
   summary: {{ data['description'] }}
   license: {{ data.get('license') }}
   license_file: LICENSE
