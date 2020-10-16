@@ -25,7 +25,7 @@ Optional:
 ```
 ### From Conda
 ```sh
-[sudo] conda install -c brsynth rpextractsink
+[sudo] conda install -c brsynth -c conda-forge -c bioconda rpextractsink
 ```
 
 ## Use
@@ -34,12 +34,13 @@ Optional:
 ```python
 from rpextractsink import rpextractsink
 
-TO_FILL
+sink = rpExtractSink(input_sbml, output_sink)
+sink.genSink()
 ```
 
 If parameters from CLI have to be parsed, the function `build_args_parser` is available:
 ```python
-from TO_FILL import build_args_parser
+from rpextractsink import build_args_parser
 
 parser = buildparser()
 params = parser.parse_args()
@@ -47,7 +48,7 @@ params = parser.parse_args()
 
 ### Run from CLI
 ```sh
-python -m rpextractsink
+python -m rpextractsink <input_sbml> <output_sink> [--compartment_id COMPARTMENT_ID] [--remove_dead_end REMOVE_DEAD_END]
 ```
 
 
@@ -59,8 +60,3 @@ python -m rpextractsink
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-### How to cite RetroRules?
-Please cite:
-
-TO_FILL
