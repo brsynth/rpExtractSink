@@ -56,11 +56,20 @@ jobs:
     - name: Build conda package
       shell: bash -l {0}
       run: |
-        conda build \
+        conda build --no-test \
           -c brsynth \
           -c conda-forge \
           -c bioconda \
           --output-folder ${CONDA_BLD_PATH} recipe
+
+    - name: Test conda package
+      shell: bash -l {0}
+      run: |
+        conda build --test \
+          -c brsynth \
+          -c conda-forge \
+          -c bioconda \
+          ${CONDA_BLD_PATH}/*/rpextractsink-*.tar.bz2
 
     - name: Convert to other platforms
       shell: bash -l {0}
