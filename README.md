@@ -2,7 +2,7 @@
 
 [![Anaconda-Server Badge](https://anaconda.org/brsynth/rpextractsink/badges/version.svg)](https://anaconda.org/brsynth/rpextractsink)
 [![Anaconda-Server Badge](https://anaconda.org/brsynth/rpextractsink/badges/license.svg)](https://anaconda.org/brsynth/rpextractsink)
-![Test (full)](https://github.com/brsynth/rpExtractSink/workflows/Test%20(full)/badge.svg)
+![Test suite](https://github.com/brsynth/rpExtractSink/workflows/Test%20suite/badge.svg)
 
 
 RetroPath2 sink generator
