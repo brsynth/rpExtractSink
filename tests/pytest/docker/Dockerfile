@@ -1,18 +1,18 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-COPY tests/pytest/environment.yml environment-test.yml
-COPY extras/environment-run.yml .
-
 RUN conda update -n base -c defaults conda
-RUN conda install -y -c conda-forge conda-merge
-RUN conda-merge environment-run.yml environment-test.yml > environment.yml
-RUN conda env create -f environment.yml
+
+COPY tests/environment.yml        conda_env_run.yml
+COPY tests/pytest/environment.yml conda_env_test.yml
+ARG PKG
+RUN conda env create -n test --file conda_env_run.yml \
+ && conda env update -n test --file conda_env_test.yml
 
 ARG HOME
 WORKDIR ${HOME}/tests
-
 ADD tests .
 
-ARG PKG
 ADD ${PKG} ${PKG}
+
+ENTRYPOINT ["conda", "run", "-n", "test"]

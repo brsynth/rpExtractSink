@@ -11,5 +11,8 @@ services:
         HOME: ${HOMEDIR}
         IMAGE: ${BASE_IMAGE}
       dockerfile: tests/pytest/docker/Dockerfile
-    entrypoint: conda run -n test
-    command: pytest --verbose
+    command: _main.py
+
+volumes:
+  input_cache:
+  cache:
