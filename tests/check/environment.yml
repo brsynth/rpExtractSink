@@ -1,4 +1,3 @@
-name: check
 channels:
   - conda-forge
 dependencies:
