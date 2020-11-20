@@ -7,7 +7,6 @@ from cobra    import flux_analysis as cobra_flux_analysis
 from tempfile import TemporaryDirectory
 from brs_libs import rpSBML
 from brs_libs import rpCache
-from argparse import ArgumentParser as argparse_ArgumentParser
 #because cobrapy is terrible
 from timeout_decorator import timeout           as timeout_decorator_timeout
 from timeout_decorator import timeout_decorator as timeout_decorator_timeout_decorator
