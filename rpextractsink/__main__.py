@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from logging       import error as logging_error
-from rpextractsink import rpExtractSink, build_args_parser
+from rpextractsink import genSink, build_args_parser
+from brs_libs      import rpCache
 
 def _cli():
     parser = build_args_parser()
@@ -14,8 +15,12 @@ def _cli():
     else:
         logging_error('Cannot interpret input -remove_dead_end: '+str(args.remove_dead_end))
 
-    rpgensink = rpExtractSink()
-    rpgensink.genSink(args.input_sbml, args.output_sink, remove_dead_end, args.compartment_id)
+    rpcache = rpCache('file', ['cid_strc'])
+    genSink(rpcache,
+            args.input_sbml,
+            args.output_sink,
+            remove_dead_end,
+            args.compartment_id)
 
 if __name__ == '__main__':
     _cli()

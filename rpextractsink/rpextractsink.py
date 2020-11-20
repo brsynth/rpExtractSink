@@ -6,129 +6,111 @@ from cobra    import io            as cobra_io
 from cobra    import flux_analysis as cobra_flux_analysis
 from tempfile import TemporaryDirectory
 from brs_libs import rpSBML
-from brs_libs import rpCache
 from glob     import glob
+from os       import path          as os_path
 #because cobrapy is terrible
 from timeout_decorator import timeout           as timeout_decorator_timeout
 from timeout_decorator import timeout_decorator as timeout_decorator_timeout_decorator
 TIMEOUT = 5
 
+logger = logging_getLogger(__name__)
 
-## Class to read all the input files
+
+
+## Pass the libSBML file to Cobra
 #
-# Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
-class rpExtractSink:
-    ## InputReader constructor
-    #
-    #  @param self The object pointer
-    def __init__(self):
-        self.logger = logging_getLogger(__name__)
-        self.logger.info('Starting instance of rpExtractSink')
-        #There are the structures from MNXM
-        self.cid_strc = rpCache('file', ['cid_strc']).cid_strc
-        self.rpsbml = None
-        self.cobraModel = None
-
-
-    #######################################################################
-    ############################# PRIVATE FUNCTIONS #######################
-    #######################################################################
-
-
-    ## Pass the libSBML file to Cobra
-    #
-    #
-    def _convertToCobra(self):
-        try:
-            with TemporaryDirectory() as tmpOutputFolder:
-                self.rpsbml.writeSBML(tmpOutputFolder)
-                self.cobraModel = cobra_io.read_sbml_model(glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
-            #use CPLEX
-            # self.cobraModel.solver = 'cplex'
-        except cobra_io.sbml.CobraSBMLError as e:
-            self.logger.error(e)
-            self.logger.error('Cannot convert the libSBML model to Cobra')
-
-
-    ## Taken from Thomas Duigou's code
-    #
-    # @param input Cobra model object
-    #
-    def _reduce_model(self):
-        """
-        Reduce the model by removing reaction that cannot carry any flux and orphan metabolites
-
-        :param model: cobra model object
-        :return: reduced cobra model object
-        """
-        lof_zero_flux_rxn = cobra_flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
-        # For assert and self.logger: Backup the list of metabolites and reactions
-        nb_metabolite_model_ids = set([m.id for m in self.cobraModel.metabolites])
-        nb_reaction_model_ids = set([m.id for m in self.cobraModel.reactions])
-        # Remove unwanted reactions and metabolites
-        self.cobraModel.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
-        # Assert the number are expected numbers
-        assert len(set([m.id for m in self.cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
-
-
-    ##
-    #
-    #
-    @timeout_decorator_timeout(TIMEOUT*60.0)
-    def _removeDeadEnd(self, sbml_path):
-        self.cobraModel = cobra_io.read_sbml_model(sbml_path, use_fbc_package=True)
-        self._reduce_model()
+#
+def _convertToCobra(rpsbml):
+    try:
         with TemporaryDirectory() as tmpOutputFolder:
-            cobra_io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml')
-            self.rpsbml = rpSBML('tmp')
-            self.rpsbml.readSBML(tmpOutputFolder+'/tmp.xml')
+            rpsbml.writeSBML(tmpOutputFolder)
+            cobraModel = cobra_io.read_sbml_model(glob(os_path.join(tmpOutputFolder, '*'))[0], use_fbc_package=True)
+        #use CPLEX
+        # cobraModel.solver = 'cplex'
+            return cobraModel
+    except cobra_io.sbml.CobraSBMLError as e:
+        logger.error(e)
+        logger.error('Cannot convert the libSBML model to Cobra')
 
 
-    #######################################################################
-    ############################# PUBLIC FUNCTIONS ########################
-    #######################################################################
+## Taken from Thomas Duigou's code
+#
+# @param input Cobra model object
+#
+def _reduce_model(cobraModel):
+    """
+    Reduce the model by removing reaction that cannot carry any flux and orphan metabolites
+
+    :param model: cobra model object
+    :return: reduced cobra model object
+    """
+    lof_zero_flux_rxn = cobra_flux_analysis.find_blocked_reactions(cobraModel, open_exchanges=True)
+    # For assert and logger: Backup the list of metabolites and reactions
+    nb_metabolite_model_ids = set([m.id for m in cobraModel.metabolites])
+    nb_reaction_model_ids   = set([m.id for m in cobraModel.reactions])
+    # Remove unwanted reactions and metabolites
+    cobraModel.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
+    # Assert the number are expected numbers
+    assert len(set([m.id for m in cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
+    return cobraModel
 
 
-    ## Generate the sink from a given model and the
-    #
-    # NOTE: this only works for MNX models, since we are parsing the id
-    # TODO: change this to read the annotations and extract the MNX id's
-    #
-    def genSink(self, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
-        ### because cobrapy can be terrible and cause infinite loop depending on the input SBML model
-        if remove_dead_end:
+##
+#
+#
+@timeout_decorator_timeout(TIMEOUT*60.0)
+def _removeDeadEnd(sbml_path):
+    cobraModel = cobra_io.read_sbml_model(sbml_path, use_fbc_package=True)
+    cobraModel = _reduce_model(cobraModel)
+    with TemporaryDirectory() as tmpOutputFolder:
+        cobra_io.write_sbml_model(cobraModel, os_path.join(tmpOutputFolder, 'tmp.xml'))
+        rpsbml = rpSBML(os_path.join(tmpOutputFolder, 'tmp.xml'))
+        return rpsbml
+
+
+#######################################################################
+############################# PUBLIC FUNCTIONS ########################
+#######################################################################
+
+
+## Generate the sink from a given model and the
+#
+# NOTE: this only works for MNX models, since we are parsing the id
+# TODO: change this to read the annotations and extract the MNX id's
+#
+def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
+    ### because cobrapy can be terrible and cause infinite loop depending on the input SBML model
+    if remove_dead_end:
+        try:
+            rpsbml = _removeDeadEnd(input_sbml)
+        except timeout_decorator_timeout_decorator.TimeoutError:
+            logger.warning('removeDeadEnd reached its timeout... parsing the whole model')
+            rpsbml = rpSBML(input_sbml)
+    else:
+        rpsbml = rpSBML(input_sbml)
+    ### open the cache ###
+    cytoplasm_species = []
+    for i in rpsbml.getModel().getListOfSpecies():
+        if i.getCompartment()==compartment_id:
+            cytoplasm_species.append(i)
+    if not cytoplasm_species:
+        logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
+        logger.error('Is the right compartment set?')
+        return False
+    with open(output_sink, 'w') as outS:
+        writer = csv_writer(outS, delimiter=',', quotechar='"', quoting=QUOTE_NONNUMERIC)
+        writer.writerow(['Name','InChI'])
+        for i in cytoplasm_species:
+            res = rpsbml.readMIRIAMAnnotation(i.getAnnotation())
+            #extract the MNX id's
             try:
-                self._removeDeadEnd(input_sbml)
-            except timeout_decorator_timeout_decorator.TimeoutError:
-                self.logger.warning('removeDeadEnd reached its timeout... parsing the whole model')
-                self.rpsbml = rpSBML('tmp')
-                self.rpsbml.readSBML(input_sbml)
-        else:
-            self.rpsbml = rpSBML('tmp')
-            self.rpsbml.readSBML(input_sbml)
-        ### open the cache ###
-        cytoplasm_species = []
-        for i in self.rpsbml.getModel().getListOfSpecies():
-            if i.getCompartment()==compartment_id:
-                cytoplasm_species.append(i)
-        if not cytoplasm_species:
-            self.logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
-            self.logger.error('Is the right compartment set?')
-            return False
-        with open(output_sink, 'w') as outS:
-            writer = csv_writer(outS, delimiter=',', quotechar='"', quoting=QUOTE_NONNUMERIC)
-            writer.writerow(['Name','InChI'])
-            for i in cytoplasm_species:
-                res = self.rpsbml.readMIRIAMAnnotation(i.getAnnotation())
-                #extract the MNX id's
-                try:
-                    mnx = res['metanetx'][0]
-                except KeyError:
-                    self.logger.warning('Cannot find MetaNetX ID for '+str(i.getId()))
-                    continue
-                try:
-                    inchi = self.cid_strc[mnx]['inchi']
-                except KeyError:
-                    inchi = None
-                if inchi:
-                    writer.writerow([mnx,inchi])
+                mnx = res['metanetx'][0]
+            except KeyError:
+                logger.warning('Cannot find MetaNetX ID for '+str(i.getId()))
+                continue
+            try:
+                inchi = rpcache.cid_strc[mnx]['inchi']
+            except KeyError:
+                inchi = None
+            if inchi:
+                writer.writerow([mnx,inchi])
