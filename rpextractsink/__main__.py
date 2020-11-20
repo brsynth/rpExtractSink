@@ -12,7 +12,7 @@ def _cli():
     elif args.remove_dead_end==False or args.remove_dead_end=='False' or args.remove_dead_end=='false' or args.remove_dead_end=='f':
         remove_dead_end = False
     else:
-        logging.error('Cannot interpret input -remove_dead_end: '+str(params.remove_dead_end))
+        logging_error('Cannot interpret input -remove_dead_end: '+str(args.remove_dead_end))
 
     rpgensink = rpExtractSink()
     rpgensink.genSink(args.input_sbml, args.output_sink, remove_dead_end, args.compartment_id)

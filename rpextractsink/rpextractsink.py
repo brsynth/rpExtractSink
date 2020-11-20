@@ -7,6 +7,7 @@ from cobra    import flux_analysis as cobra_flux_analysis
 from tempfile import TemporaryDirectory
 from brs_libs import rpSBML
 from brs_libs import rpCache
+from glob     import glob
 #because cobrapy is terrible
 from timeout_decorator import timeout           as timeout_decorator_timeout
 from timeout_decorator import timeout_decorator as timeout_decorator_timeout_decorator
@@ -41,7 +42,7 @@ class rpExtractSink:
         try:
             with TemporaryDirectory() as tmpOutputFolder:
                 self.rpsbml.writeSBML(tmpOutputFolder)
-                self.cobraModel = cobra_io.read_sbml_model(glob.glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
+                self.cobraModel = cobra_io.read_sbml_model(glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
             #use CPLEX
             # self.cobraModel.solver = 'cplex'
         except cobra_io.sbml.CobraSBMLError as e:
