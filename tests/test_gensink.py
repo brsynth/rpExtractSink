@@ -15,7 +15,9 @@ class Test(Main):
     # cls_name  = 'rpExtractSink'
     obj       = rpExtractSink()
     func_name = 'genSink'
-    cmd  = (os_path.join('data', 'e_coli_model.sbml') + ' ' os_path.join('data', 'test_rpExtractSink.csv')).split()
+    cmd  = (os_path.join('data', 'e_coli_model.sbml') \
+           + ' ' \
+           + os_path.join('data', 'test_rpExtractSink.csv')).split()
     bap  = getattr(__import__(mod_name), 'build_args_parser')
     args = bap().parse_args(cmd)
 
