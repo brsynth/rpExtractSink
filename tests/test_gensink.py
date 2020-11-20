@@ -5,7 +5,7 @@ Created on Jul 15 2020
 """
 
 from _main         import Main
-from os            import path          as os_path
+from os            import path as os_path
 from rpextractsink import rpExtractSink
 
 class Test(Main):
@@ -15,7 +15,7 @@ class Test(Main):
     # cls_name  = 'rpExtractSink'
     obj       = rpExtractSink()
     func_name = 'genSink'
-    cmd  = 'data/e_coli_model.sbml data/test_rpExtractSink.csv'.split()
+    cmd  = (os_path.join('data', 'e_coli_model.sbml') + ' ' os_path.join('data', 'test_rpExtractSink.csv')).split()
     bap  = getattr(__import__(mod_name), 'build_args_parser')
     args = bap().parse_args(cmd)
 
