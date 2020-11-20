@@ -17,11 +17,10 @@ requirements:
     - python {{ python }}
   run:
     - python {{ python }}
-    - python=3.6|3.7
-    - brs_libs==0.2.0
-    - cobra==0.16
-    - timeout-decorator==0.4.1
-    - rdkit==2020.03.6
+    - brs_libs
+    - cobra
+    - timeout-decorator
+    - rdkit
 
 test:
   source_files:
@@ -32,8 +31,7 @@ test:
     - pytest
   commands:
     - python -m {{ name|lower }} --help
-    - cd tests
-    - pytest -v
+    - cd tests ; pytest -v
 
 about:
   home: https://github.com/brsynth/{{ name|lower }}
