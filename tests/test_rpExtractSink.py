@@ -15,6 +15,8 @@ from brs_libs      import rpCache
 from hashlib  import sha256
 from pathlib  import Path
 from tempfile import NamedTemporaryFile
+from filecmp  import cmp
+from os       import path as os_path
 
 
 
@@ -26,12 +28,10 @@ class Test_rpExtractSink(TestCase):
     rpcache = rpCache('file', ['cid_strc'])
 
     def test_genSink(self):
-        outfile = NamedTemporaryFile(delete=True)
+        outfile = NamedTemporaryFile(delete=True).name
         genSink(self.rpcache,
                 input_sbml=os_path.join('data', 'e_coli_model.sbml'),
                 output_sink=outfile)
-        self.assertEqual(
-            sha256(Path(outfile.name).read_bytes()).hexdigest(),
-            '37be178695f79f7fe58d50a799dbc6f1840793157ad40fd1596d54311222f0760d6ebb46e3ba4d72782b3ab8ac8228e9045868b3f2c519c9e3dfeb32375b7df8'
-                        )
+        self.assertTrue(
+            cmp(Path(outfile), os_path.join('data', 'output_sink.csv')))
         outfile.close()
