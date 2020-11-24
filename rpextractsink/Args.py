@@ -1,4 +1,4 @@
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser
 
 
 def build_args_parser():
@@ -20,19 +20,6 @@ def _add_arguments(parser):
                         default='MNXC3',
                         help='SBML compartment id from which to extract the chemical species')
     parser.add_argument('--remove_dead_end',
-                        type=str2bool, nargs='?',
-                        const=True,
-                        default='True',
+                        action='store_true',
                         help='upon FVA evaluation, ignore chemical species that do not have any flux')
     return parser
-
-
-def str2bool(v):
-    if isinstance(v, bool):
-        return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise ArgumentTypeError('Boolean value expected.')
