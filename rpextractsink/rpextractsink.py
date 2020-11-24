@@ -1,5 +1,5 @@
-from csv      import writer        as csv_writer
-from csv      import QUOTE_NONNUMERIC
+# from csv      import writer        as csv_writer
+# from csv      import QUOTE_NONNUMERIC
 # from rdkit.Chem import MolFromSmiles, MolFromInchi, MolToSmiles, MolToInchi, MolToInchiKey, AddHs
 from logging  import getLogger     as logging_getLogger
 from cobra    import io            as cobra_io
@@ -97,9 +97,10 @@ def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment
         logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
         logger.error('Is the right compartment set?')
         return False
-    with open(output_sink, 'w') as outS:
-        writer = csv_writer(outS, delimiter=',', quotechar='"', quoting=QUOTE_NONNUMERIC)
-        writer.writerow(['Name','InChI'])
+    with open(output_sink, 'w', encoding='utf-8') as outS:
+        # writer = csv_writer(outS, delimiter=',', quotechar='"', quoting=QUOTE_NONNUMERIC)
+        # writer.writerow(['Name','InChI'])
+        write(outS, ['Name','InChI'])
         for i in cytoplasm_species:
             res = rpsbml.readMIRIAMAnnotation(i.getAnnotation())
             #extract the MNX id's
@@ -113,4 +114,21 @@ def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment
             except KeyError:
                 inchi = None
             if inchi:
-                writer.writerow([mnx,inchi])
+                write(outS, [mnx,inchi])
+                # writer.writerow([mnx,inchi])
+
+
+def write(outFile, elts, delimiter=',', quotechar='"'):
+    """
+    Write elements of elts list into file as 'csv' would do
+
+    :param file: file to write into
+    :param elts: list of elements to write
+    :param delimiter: character to insert between each element
+    :param quotechar: character to put around each element
+    """
+    if elts:
+        outFile.write(quotechar+elts[0]+quotechar)
+        for elt in elts[1:]:
+            outFile.write(delimiter+quotechar+elt+quotechar)
+    outFile.write('\n')
