@@ -28,10 +28,21 @@ class Test_rpExtractSink(TestCase):
     rpcache = rpCache('file', ['cid_strc'])
 
     def test_genSink(self):
-        outfile = NamedTemporaryFile(delete=True).name
+        outfile = NamedTemporaryFile(delete=True)
         genSink(self.rpcache,
                 input_sbml=os_path.join('data', 'e_coli_model.sbml'),
-                output_sink=outfile)
+                output_sink=outfile.name,
+                remove_dead_end=False)
         self.assertTrue(
-            cmp(Path(outfile), os_path.join('data', 'output_sink.csv')))
+            cmp(Path(outfile.name), os_path.join('data', 'output_sink.csv')))
+        outfile.close()
+
+    def test_genSink_rmDE(self):
+        outfile = NamedTemporaryFile(delete=True)
+        genSink(self.rpcache,
+                input_sbml=os_path.join('data', 'e_coli_model.sbml'),
+                output_sink=outfile.name,
+                remove_dead_end=True)
+        self.assertTrue(
+            cmp(Path(outfile.name), os_path.join('data', 'output_sink_woDE.csv')))
         outfile.close()
