@@ -8,13 +8,12 @@ from tempfile import TemporaryDirectory
 from brs_libs import rpSBML
 from glob     import glob
 from os       import path          as os_path
-#because cobrapy is terrible
+# because cobrapy is terrible
 from timeout_decorator import timeout           as timeout_decorator_timeout
 from timeout_decorator import timeout_decorator as timeout_decorator_timeout_decorator
 TIMEOUT = 5
 
 logger = logging_getLogger(__name__)
-
 
 
 ## Pass the libSBML file to Cobra
@@ -25,7 +24,7 @@ def _convertToCobra(rpsbml):
         with TemporaryDirectory() as tmpOutputFolder:
             rpsbml.writeSBML(tmpOutputFolder)
             cobraModel = cobra_io.read_sbml_model(glob(os_path.join(tmpOutputFolder, '*'))[0], use_fbc_package=True)
-        #use CPLEX
+        # use CPLEX
         # cobraModel.solver = 'cplex'
             return cobraModel
     except cobra_io.sbml.CobraSBMLError as e:
@@ -46,12 +45,15 @@ def _reduce_model(cobraModel):
     """
     lof_zero_flux_rxn = cobra_flux_analysis.find_blocked_reactions(cobraModel, open_exchanges=True)
     # For assert and logger: Backup the list of metabolites and reactions
-    nb_metabolite_model_ids = set([m.id for m in cobraModel.metabolites])
+    # nb_metabolite_model_ids = set([m.id for m in cobraModel.metabolites])
     nb_reaction_model_ids   = set([m.id for m in cobraModel.reactions])
     # Remove unwanted reactions and metabolites
     cobraModel.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
-    # Assert the number are expected numbers
-    assert len(set([m.id for m in cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
+    # # Assert the number are expected numbers
+    # assert len(set([m.id for m in cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
+    if len(set([m.id for m in cobraModel.reactions])) != len(nb_reaction_model_ids) - len(lof_zero_flux_rxn):
+        logger.error(" *** Nb of reactions incorrect. Exiting...")
+        exit()
     return cobraModel
 
 
@@ -91,7 +93,7 @@ def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment
     ### open the cache ###
     cytoplasm_species = []
     for i in rpsbml.getModel().getListOfSpecies():
-        if i.getCompartment()==compartment_id:
+        if i.getCompartment() == compartment_id:
             cytoplasm_species.append(i)
     if not cytoplasm_species:
         logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
@@ -100,10 +102,10 @@ def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment
     with open(output_sink, 'w', encoding='utf-8') as outS:
         # writer = csv_writer(outS, delimiter=',', quotechar='"', quoting=QUOTE_NONNUMERIC)
         # writer.writerow(['Name','InChI'])
-        write(outS, ['Name','InChI'])
+        write(outS, ['Name', 'InChI'])
         for i in cytoplasm_species:
             res = rpsbml.readMIRIAMAnnotation(i.getAnnotation())
-            #extract the MNX id's
+            # extract the MNX id's
             try:
                 mnx = res['metanetx'][0]
             except KeyError:
@@ -114,7 +116,7 @@ def genSink(rpcache, input_sbml, output_sink, remove_dead_end=False, compartment
             except KeyError:
                 inchi = None
             if inchi:
-                write(outS, [mnx,inchi])
+                write(outS, [mnx, inchi])
                 # writer.writerow([mnx,inchi])
 
 

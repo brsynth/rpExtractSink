@@ -12,7 +12,6 @@ from rpextractsink import genSink
 from brs_libs      import rpCache
 
 # Specific for tests themselves
-from hashlib  import sha256
 from pathlib  import Path
 from tempfile import NamedTemporaryFile
 from filecmp  import cmp
