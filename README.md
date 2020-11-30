@@ -54,6 +54,17 @@ params = parser.parse_args()
 python -m rpextractsink <input_sbml> <output_sink> [--compartment_id COMPARTMENT_ID] [--remove_dead_end REMOVE_DEAD_END]
 ```
 
+## Tests
+Test can be run with the following commands:
+
+### Natively
+```bash
+cd tests
+pytest -v
+```
+
+# CI/CD
+For further tests and development tools, a CI toolkit is provided in `ci` folder (see [ci/README.md](ci/README.md)).
 
 ## Authors
 
