@@ -6,7 +6,6 @@ from cobra    import io            as cobra_io
 from cobra    import flux_analysis as cobra_flux_analysis
 from tempfile import TemporaryDirectory
 from brs_libs import rpSBML
-from glob     import glob
 from os       import path          as os_path
 # because cobrapy is terrible
 from timeout_decorator import timeout           as timeout_decorator_timeout
