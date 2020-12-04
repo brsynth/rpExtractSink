@@ -16,22 +16,6 @@ TIMEOUT = 5
 logger = logging_getLogger(__name__)
 
 
-## Pass the libSBML file to Cobra
-#
-#
-def _convertToCobra(rpsbml):
-    try:
-        with TemporaryDirectory() as tmpOutputFolder:
-            rpsbml.writeSBML(tmpOutputFolder)
-            cobraModel = cobra_io.read_sbml_model(glob(os_path.join(tmpOutputFolder, '*'))[0], use_fbc_package=True)
-        # use CPLEX
-        # cobraModel.solver = 'cplex'
-            return cobraModel
-    except cobra_io.sbml.CobraSBMLError as e:
-        logger.error(e)
-        logger.error('Cannot convert the libSBML model to Cobra')
-
-
 ## Taken from Thomas Duigou's code
 #
 # @param input Cobra model object
