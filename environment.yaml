@@ -1,0 +1,11 @@
+name: rpextractsink
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - rr_cache
+  - brs_utils
+  - rplibs
+  - pip
+  - pip:
+      - cobra

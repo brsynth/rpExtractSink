@@ -1,48 +1,55 @@
-from setuptools import setup
+# coding: utf-8
+from setuptools import setup, find_packages
+from os import path as os_path
 
-_readme = 'README.md'
+## INFOS ##
+package = "rpextractsink"
+descr = "RetroPath2 sink generator"
+url = "https://github.com/brsynth/rpExtractSink"
+authors = "Joan Hérisson, Melchior du Lac, Thomas Duigou"
+corr_author = "joan.herisson@univ-evry.fr"
 
-with open(_readme, 'r', encoding='utf-8') as f:
+## LONG DESCRIPTION
+with open(
+    os_path.join(os_path.dirname(os_path.realpath(__file__)), "README.md"),
+    "r",
+    encoding="utf-8",
+) as f:
     long_description = f.read()
 
-_release = 'RELEASE'
 
-with open(_release, 'r') as f:
-    _version = f.readline().split()[0]
+def get_version():
+    with open(
+        os_path.join(os_path.dirname(os_path.realpath(__file__)), "CHANGELOG.md"), "r"
+    ) as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.startswith("##"):
+            from re import search
 
-_extras_path = 'extras'
-with open(_extras_path+'/.env', 'r', encoding='utf-8') as f:
-    for line in f:
-        if line.startswith('PACKAGE='):
-            _package = line.splitlines()[0].split('=')[1].lower()
-        if line.startswith('URL='):
-            _url = line.splitlines()[0].split('=')[1].lower()
-        if line.startswith('AUTHORS='):
-            _authors = line.splitlines()[0].split('=')[1].lower()
-        if line.startswith('DESCR='):
-            _descr = line.splitlines()[0].split('=')[1].lower()
-        if line.startswith('CORR_AUTHOR='):
-            _corr_author = line.splitlines()[0].split('=')[1].lower()
+            m = search("\[(.+)\]", line)
+            if m:
+                return m.group(1)
+
 
 setup(
-    name                          = _package,
-    version                       = _version,
-    author                        = _authors,
-    author_email                  = _corr_author,
-    description                   = _descr,
-    long_description              = long_description,
-    long_description_content_type = 'text/markdown',
-    url                           = _url,
-    packages                      = [_package],
-    package_dir                   = {_package: _package},
-    include_package_data          = True,
-    # install_requires              = required,
-    test_suite                    = 'pytest',
-    license                       = 'MIT',
+    name=package,
+    version=get_version(),
+    author=authors,
+    author_email=corr_author,
+    description=descr,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url=url,
+    packages=find_packages(),
+    package_dir={package: package},
+    include_package_data=True,
+    test_suite="pytest",
+    license="MIT",
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
-    python_requires               = '>=3.5',
+    python_requires=">=3.7",
 )

@@ -1,20 +1,58 @@
 #!/usr/bin/env python
 
-from rpextractsink import genSink, build_args_parser
-from brs_libs      import rpCache
+from rpextractsink.extract_sink import genSink
+from rpextractsink.Args import build_args_parser
+
+from rr_cache import rrCache
 
 
 def _cli():
-    parser = build_args_parser()
-    args  = parser.parse_args()
+    parser = build_args_parser(
+        prog="rpextractsink",
+        description="Generate the sink from a model SBML by specifying the compartment",
+    )
+    args = parser.parse_args()
 
-    rpcache = rpCache('file', ['cid_strc'])
-    genSink(rpcache,
-            args.input_sbml,
-            args.output_sink,
-            args.remove_dead_end,
-            args.compartment_id)
+    from rptools.__main__ import init
+
+    logger = init(parser, args)
+
+    if args.cache_dir is None:
+        cache = rrCache(cspace=args.cspace, logger=logger)
+    else:
+        cache = rrCache(cspace=args.cspace, install_dir=args.cache_dir, logger=logger)
+    sink = genSink(
+        cache,
+        args.input_sbml,
+        args.remove_dead_end,
+        args.compartment_id,
+        args.standalone,
+        logger=logger,
+    )
+
+    logger.debug(f"Writing sink to {args.output_sink}...")
+    # Write the sink file
+    with open(args.output_sink, "w", encoding="utf-8") as outS:
+        write(outS, ["Name", "InChI"])
+        for _mnx_id, _inchi in sink.items():
+            write(outS, [_mnx_id, _inchi])
 
 
-if __name__ == '__main__':
+def write(outFile, elts, delimiter=",", quotechar='"'):
+    """
+    Write elements of elts list into file as 'csv' would do
+
+    :param file: file to write into
+    :param elts: list of elements to write
+    :param delimiter: character to insert between each element
+    :param quotechar: character to put around each element
+    """
+    if elts:
+        outFile.write(quotechar + elts[0] + quotechar)
+        for elt in elts[1:]:
+            outFile.write(delimiter + quotechar + elt + quotechar)
+    outFile.write("\n")
+
+
+if __name__ == "__main__":
     _cli()

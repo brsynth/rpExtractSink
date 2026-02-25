@@ -8,15 +8,15 @@ Created on June 17 2020
 from unittest import TestCase
 
 # Specific for tool
-from rpextractsink import genSink
-from brs_libs      import rpCache
+from rpextractsink.extract_sink import genSink
+from rr_cache import rrCache
 
 # Specific for tests themselves
-from pathlib  import Path
-from tempfile import NamedTemporaryFile
-from filecmp  import cmp
-from os       import path as os_path
-
+from re import findall as re_findall
+from os import path as os_path
+from brs_utils import create_logger, extract_gz
+from shutil import rmtree
+from tempfile import mkdtemp
 
 
 # Cette classe est un groupe de tests. Son nom DOIT commencer
@@ -24,24 +24,101 @@ from os       import path as os_path
 # 'Test_' prefix is mandatory
 class Test_rpExtractSink(TestCase):
 
-    rpcache = rpCache('file', ['cid_strc'])
+    data_path = os_path.join(os_path.dirname(__file__), "data")
+    e_coli_model_path_gz = os_path.join(data_path, "e_coli_model.sbml.gz")
 
+    cache = rrCache(
+        # ['cid_strc'],
+        cspace="mnx3.1",
+        interactive=False,
+    )
+
+    def setUp(self):
+        self.logger = create_logger(__name__, "ERROR")
+
+        # Create persistent temp folder
+        # to deflate compressed data file so that
+        # it remains reachable outside of this method.
+        # Has to remove manually it in tearDown() method
+        self.temp_d = mkdtemp()
+
+        self.e_coli_model_path = extract_gz(self.e_coli_model_path_gz, self.temp_d)
+
+    def tearDown(self):
+        rmtree(self.temp_d)
+
+    # Test with dead ends
     def test_genSink(self):
-        outfile = NamedTemporaryFile(delete=True)
-        genSink(self.rpcache,
-                input_sbml=os_path.join('data', 'e_coli_model.sbml'),
-                output_sink=outfile.name,
-                remove_dead_end=False)
-        self.assertTrue(
-            cmp(Path(outfile.name), os_path.join('data', 'output_sink.csv')))
-        outfile.close()
+        self._test_genSink(
+            cache=self.cache,
+            input_sbml=self.e_coli_model_path,
+            remove_dead_end=False,
+            compartment_id="MNXC3",
+            standalone=False,
+            ref_file="output_sink.csv",
+        )
 
+    # Test without dead ends
     def test_genSink_rmDE(self):
-        outfile = NamedTemporaryFile(delete=True)
-        genSink(self.rpcache,
-                input_sbml=os_path.join('data', 'e_coli_model.sbml'),
-                output_sink=outfile.name,
-                remove_dead_end=True)
-        self.assertTrue(
-            cmp(Path(outfile.name), os_path.join('data', 'output_sink_woDE.csv')))
-        outfile.close()
+        self._test_genSink(
+            cache=self.cache,
+            input_sbml=self.e_coli_model_path,
+            remove_dead_end=True,
+            compartment_id="MNXC3",
+            standalone=False,
+            ref_file="output_sink_woDE.csv",
+        )
+
+    # Test with wrong compartment
+    def test_genSink_wrong_comp(self):
+        test_sink = genSink(
+            cache=self.cache,
+            input_sbml=self.e_coli_model_path,
+            remove_dead_end=False,
+            compartment_id="MNXC3_wrong",
+            standalone=False,
+        )
+        self.assertDictEqual(test_sink, {})
+
+    # Test without Internet connection
+    def test_genSink_standalone(self):
+        self._test_genSink(
+            cache=self.cache,
+            input_sbml=self.e_coli_model_path,
+            remove_dead_end=False,
+            compartment_id="MNXC3",
+            ref_file="output_sink_standalone.csv",
+            standalone=True,
+        )
+
+    def _test_genSink(
+        self,
+        cache: rrCache,
+        input_sbml: str,
+        remove_dead_end: bool,
+        compartment_id: str,
+        ref_file: str,
+        standalone: bool,
+    ):
+        test_sink = genSink(
+            cache=cache,
+            input_sbml=input_sbml,
+            remove_dead_end=remove_dead_end,
+            compartment_id=compartment_id,
+            standalone=standalone,
+            logger=self.logger,
+        )
+        ref_sink = {}
+        with open(os_path.join(self.data_path, ref_file), "r") as ref_f:
+            ref_content = ref_f.readlines()
+            for line in ref_content[1:]:  # skip header
+                id, inchi = re_findall(r'"([^"]+)"', line)
+                ref_sink[id] = inchi
+        # print('"Name","InChI"')
+        # for key, value in test_sink.items():
+        #     print(f'"{key}","{value}"')
+        # exit()
+        print('"Name","InChI"')
+        for cid, inchi in test_sink.items():
+            print(f'"{cid}","{inchi}"')
+        self.assertDictEqual(test_sink, ref_sink)

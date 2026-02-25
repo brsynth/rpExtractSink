@@ -1,8 +1,4 @@
-# rpextractsink
-
-[![Anaconda-Server Badge](https://anaconda.org/brsynth/rpextractsink/badges/version.svg)](https://anaconda.org/brsynth/rpextractsink)
-[![Anaconda-Server Badge](https://anaconda.org/brsynth/rpextractsink/badges/license.svg)](https://anaconda.org/brsynth/rpextractsink)
-![Test suite](https://github.com/brsynth/rpExtractSink/workflows/Test%20suite/badge.svg)
+# rpExtractSink
 
 
 RetroPath2 sink generator
@@ -14,7 +10,7 @@ Required:
 
 Optional:
 * **--remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
-* **--compartment_id**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
+* **--compartment_id**: (string, default: 'c') Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
 
 ## Output
 
@@ -22,20 +18,15 @@ Optional:
 
 
 ## Install
-### From pip
 ```sh
-[sudo] python -m pip install rpextractsink
-```
-### From Conda
-```sh
-[sudo] conda install -c brsynth -c conda-forge -c bioconda rpextractsink
+[sudo] conda install -c conda-forge rpextractsink
 ```
 
 ## Use
 
 ### Function call from Python code
 ```python
-from rpextractsink import rpextractsink
+from rptools.rpextractsink import rpextractsink
 
 sink = rpExtractSink(input_sbml, output_sink)
 sink.genSink()
@@ -43,7 +34,7 @@ sink.genSink()
 
 If parameters from CLI have to be parsed, the function `build_args_parser` is available:
 ```python
-from rpextractsink import build_args_parser
+from rptools.pextractsink import build_args_parser
 
 parser = buildparser()
 params = parser.parse_args()
@@ -51,7 +42,11 @@ params = parser.parse_args()
 
 ### Run from CLI
 ```sh
-python -m rpextractsink <input_sbml> <output_sink> [--compartment_id COMPARTMENT_ID] [--remove_dead_end REMOVE_DEAD_END]
+python -m pextractsink \
+    <input_sbml> \
+    <output_sink> \
+    [--compartment_id COMPARTMENT_ID] \
+    [--remove_dead_end REMOVE_DEAD_END]
 ```
 
 ## Tests
@@ -59,12 +54,8 @@ Test can be run with the following commands:
 
 ### Natively
 ```bash
-cd tests
-pytest -v
+python -m pytest tests
 ```
-
-# CI/CD
-For further tests and development tools, a CI toolkit is provided in `ci` folder (see [ci/README.md](ci/README.md)).
 
 ## Authors
 
