@@ -6,6 +6,7 @@ from brs_utils import init
 from rr_cache import rrCache
 from rpextractsink._version import __version__
 
+
 def _cli():
     parser = build_args_parser(
         prog="rpextractsink",
