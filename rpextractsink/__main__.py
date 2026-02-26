@@ -2,9 +2,9 @@
 
 from rpextractsink.extract_sink import genSink
 from rplibs import build_args_parser
-
+from brs_utils import init
 from rr_cache import rrCache
-
+from rpextractsink._version import __version__
 
 def _cli():
     parser = build_args_parser(
@@ -13,9 +13,7 @@ def _cli():
     )
     args = parser.parse_args()
 
-    from rptools.__main__ import init
-
-    logger = init(parser, args)
+    logger = init(parser, args, __version__)
 
     if args.cache_dir is None:
         cache = rrCache(cspace=args.cspace, logger=logger)
