@@ -1,7 +1,9 @@
 # rpExtractSink
 
+RetroPath2 sink generator. From a given SBML file, the tool will extract all the sink molecules and generate a csv file with the InChI structures. For each molecule, the InChI will be get from:
 
-RetroPath2 sink generator
+1. The local cache (rrCache), if available
+2. The MetaNetX database from MIRIAM URLs (MetaNetX first)
 
 ## Input
 
@@ -9,8 +11,10 @@ Required:
 * **input_sbml**: (string) Path to the input SBML file
 
 Optional:
-* **--remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
-* **--compartment_id**: (string, default: 'c') Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
+* **--remove-dead-end**: (boolean, default: True) Perform FVA (Flux Variability Analysis) evaluation to remove dead end metabolites
+* **--compartment-id**: (string, default: 'c') Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
+* **--standalone**: (boolean, default: False) If True, do not retrieve InChI from Internet
+* **--cache-dir**: (string, default: None) Path to the cache directory
 
 ## Output
 
@@ -18,35 +22,30 @@ Optional:
 
 
 ## Install
-```sh
-[sudo] conda install -c conda-forge rpextractsink
-```
+Please see `rptool` documentation.
 
 ## Use
 
 ### Function call from Python code
 ```python
-from rptools.rpextractsink import rpextractsink
+from rr_cache import rrCache
+from rptools.rpextractsink import genSink
 
-sink = rpExtractSink(input_sbml, output_sink)
-sink.genSink()
+cache = rrCache(
+    attrs=['cid_strc'],
+    cache_dir=args.cache_dir,
+    logger=logger
+)
+sink = genSink(
+    cache,
+    args.input_sbml
+)
 ```
 
-If parameters from CLI have to be parsed, the function `build_args_parser` is available:
-```python
-from rptools.pextractsink import build_args_parser
-
-parser = buildparser()
-params = parser.parse_args()
-```
 
 ### Run from CLI
 ```sh
-python -m pextractsink \
-    <input_sbml> \
-    <output_sink> \
-    [--compartment_id COMPARTMENT_ID] \
-    [--remove_dead_end REMOVE_DEAD_END]
+python -m rpextractsink --help
 ```
 
 ## Tests
@@ -54,13 +53,16 @@ Test can be run with the following commands:
 
 ### Natively
 ```bash
-python -m pytest tests
+python -m pytest tests/rpextractsink
 ```
+
+## CI/CD
+For further tests and development tools, a CI toolkit is provided in `ci` folder (see [ci/README.md](ci/README.md)).
 
 ## Authors
 
-* **Melchior du Lac**
-* Thomas Duigou, Joan Hérisson
+* **Joan Hérisson**
+* Thomas Duigou, Melchior du Lac
 
 ## License
 
