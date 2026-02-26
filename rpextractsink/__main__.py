@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from rpextractsink.extract_sink import genSink
-from rpextractsink.Args import build_args_parser
+from rplibs import build_args_parser
 
 from rr_cache import rrCache
 
