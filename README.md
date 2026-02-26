@@ -22,14 +22,14 @@ Optional:
 
 
 ## Install
-Please see `rptool` documentation.
+conda install -c conda-forge rpextractsink
 
 ## Use
 
 ### Function call from Python code
 ```python
 from rr_cache import rrCache
-from rptools.rpextractsink import genSink
+from rpextractsink import genSink
 
 cache = rrCache(
     attrs=['cid_strc'],
@@ -53,11 +53,8 @@ Test can be run with the following commands:
 
 ### Natively
 ```bash
-python -m pytest tests/rpextractsink
+python -m pytest
 ```
-
-## CI/CD
-For further tests and development tools, a CI toolkit is provided in `ci` folder (see [ci/README.md](ci/README.md)).
 
 ## Authors
 
