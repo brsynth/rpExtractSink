@@ -46,9 +46,6 @@ def _reduce_model(cobraModel, logger: Logger = getLogger(__name__)):
     return cobraModel
 
 
-##
-#
-#
 @timeout(__TIMEOUT * 60.0)
 def _removeDeadEnd(sbml_path) -> rpSBML:
     cobraModel = cobra_io.read_sbml_model(sbml_path, use_fbc_package=True)
