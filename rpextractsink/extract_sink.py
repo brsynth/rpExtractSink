@@ -342,13 +342,6 @@ def genSink(
         # Find MNX ID from MIRIAM
         mnx_id = find_mnx_id(miriam)
 
-        # print(f"spe = {spe.getId()}, mnx_id = {mnx_id}")
-        # print(get_inchi_from_url(
-        #                 f'https://www.metanetx.org/chem_info/{spe.getId()}',
-        #                 logger
-        #             ))
-        # exit(0)
-
         if mnx_id:
             inchi = get_inchi_from_mnxid(mnx_id, cache, standalone, logger)
         elif not standalone:

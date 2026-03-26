@@ -114,11 +114,4 @@ class Test_rpExtractSink(TestCase):
             for line in ref_content[1:]:  # skip header
                 id, inchi = re_findall(r'"([^"]+)"', line)
                 ref_sink[id] = inchi
-        # print('"Name","InChI"')
-        # for key, value in test_sink.items():
-        #     print(f'"{key}","{value}"')
-        # exit()
-        print('"Name","InChI"')
-        for cid, inchi in test_sink.items():
-            print(f'"{cid}","{inchi}"')
         self.assertDictEqual(test_sink, ref_sink)
