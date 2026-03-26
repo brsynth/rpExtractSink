@@ -1461,8 +1461,7 @@
 	<rdf:li rdf:resource="http://identifiers.org/chebi/CHEBI:30566"/>
 	<rdf:li rdf:resource="http://identifiers.org/chebi/CHEBI:40483"/>
 	<rdf:li rdf:resource="http://identifiers.org/chebi/CHEBI:59888"/>
-  pecies
-  <rdf:li rdf:resource="http://identifiers.org/bigg.metabolite/4abut"/>
+    <rdf:li rdf:resource="http://identifiers.org/bigg.metabolite/4abut"/>
 	<rdf:li rdf:resource="http://identifiers.org/bigg.metabolite/M_4abut"/>
 	<rdf:li rdf:resource="http://identifiers.org/hmdb/HMDB00112"/>
 	<rdf:li rdf:resource="http://identifiers.org/kegg.compound/C00334"/>
