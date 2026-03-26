@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.1](https://github.com/brsynth/rpExtractSink/tree/0.0.1) (2026-03-26)
+## [6.8.0](https://github.com/brsynth/rpExtractSink/tree/0.0.1) (2026-03-26)
 
 [Full Changelog](https://github.com/brsynth/rpExtractSink/compare/ef5f147914c20e07a41037a2a4ee4853af246993...0.0.1)
 
