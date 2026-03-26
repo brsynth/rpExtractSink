@@ -1,15 +1,16 @@
 # Changelog
 
-## [0.0.2](https://github.com/brsynth/rpExtractSink/tree/0.0.2) (2026-03-26)
+## [6.8.1](https://github.com/brsynth/rpExtractSink/tree/6.8.1) (2026-03-26)
 
-[Full Changelog](https://github.com/brsynth/rpExtractSink/compare/0.0.1...0.0.2)
+[Full Changelog](https://github.com/brsynth/rpExtractSink/compare/6.8.0...6.8.1)
 
-## [0.0.1](https://github.com/brsynth/rpExtractSink/tree/0.0.1) (2026-03-26)
+## [6.8.0](https://github.com/brsynth/rpExtractSink/tree/6.8.0) (2026-03-26)
 
-[Full Changelog](https://github.com/brsynth/rpExtractSink/compare/ef5f147914c20e07a41037a2a4ee4853af246993...0.0.1)
+[Full Changelog](https://github.com/brsynth/rpExtractSink/compare/ef5f147914c20e07a41037a2a4ee4853af246993...6.8.0)
 
 **Merged pull requests:**
 
+- update version [\#3](https://github.com/brsynth/rpExtractSink/pull/3) ([breakthewall](https://github.com/breakthewall))
 - Main [\#2](https://github.com/brsynth/rpExtractSink/pull/2) ([breakthewall](https://github.com/breakthewall))
 
 
