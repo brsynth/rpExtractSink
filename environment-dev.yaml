@@ -1,4 +1,4 @@
-name: rplibs
+name: rpextractsink
 channels:
   - conda-forge
   - nodefaults
