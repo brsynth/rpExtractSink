@@ -18,9 +18,6 @@ __TIMEOUT = 5
 
 
 ## Taken from Thomas Duigou's code
-#
-# @param input Cobra model object
-#
 def _reduce_model(cobraModel, logger: Logger = getLogger(__name__)):
     """Reduces the model by removing reaction that cannot carry any flux and orphan metabolites
 
