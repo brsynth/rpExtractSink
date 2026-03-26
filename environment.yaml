@@ -6,6 +6,4 @@ dependencies:
   - rr_cache
   - brs_utils
   - rplibs
-  - pip
-  - pip:
-      - cobra
+
