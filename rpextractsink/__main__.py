@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from rpextractsink.extract_sink import genSink
-from rplibs import build_args_parser
 from brs_utils import init
 from rr_cache import rrCache
-from rpextractsink._version import __version__
+from .extract_sink import genSink
+from .Args import build_args_parser
+from ._version import __version__
 
 
 def _cli():
