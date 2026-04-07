@@ -3,7 +3,8 @@
 from brs_utils import init
 from rr_cache import rrCache
 from .extract_sink import genSink
-from .Args import build_args_parser
+from rplibs import build_args_parser
+from .Args import add_arguments
 from ._version import __version__
 
 
@@ -11,6 +12,7 @@ def _cli():
     parser = build_args_parser(
         prog="rpextractsink",
         description="Generate the sink from a model SBML by specifying the compartment",
+        m_add_args=add_arguments,
     )
     args = parser.parse_args()
 
