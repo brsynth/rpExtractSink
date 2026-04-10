@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-from brs_utils import init
+from brs_utils import (
+    init as init_logger,
+    build_args_parser
+)
 from rr_cache import rrCache
 from .extract_sink import genSink
-from rplibs import build_args_parser
 from .Args import add_arguments
 from ._version import __version__
 
@@ -11,12 +13,13 @@ from ._version import __version__
 def _cli():
     parser = build_args_parser(
         prog="rpextractsink",
+        version = __version__,
         description="Generate the sink from a model SBML by specifying the compartment",
         m_add_args=add_arguments,
     )
     args = parser.parse_args()
 
-    logger = init(parser, args, __version__)
+    logger = init_logger(parser, args, __version__)
 
     if args.cache_dir is None:
         cache = rrCache(cspace=args.cspace, logger=logger)
