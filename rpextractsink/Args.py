@@ -1,13 +1,9 @@
 from argparse import ArgumentParser
 
-from brs_utils import add_logger_args
-
 DEFAULTS = {"comp": "c", "cspace": "mnx4.4"}
 
 
 def add_arguments(parser: ArgumentParser) -> ArgumentParser:
-    # Add arguments related to the logger
-    parser = add_logger_args(parser)
 
     parser.add_argument("input_sbml", type=str, help="input SBML file")
     parser.add_argument("output_sink", type=str, help="output sink file")
