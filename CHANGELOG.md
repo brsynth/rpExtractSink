@@ -1,8 +1,16 @@
 # Changelog
 
+## [6.8.2](https://github.com/brsynth/rpExtractSink/tree/6.8.2) (2026-04-10)
+
+[Full Changelog](https://github.com/brsynth/rpExtractSink/compare/6.8.1...6.8.2)
+
 ## [6.8.1](https://github.com/brsynth/rpExtractSink/tree/6.8.1) (2026-03-26)
 
 [Full Changelog](https://github.com/brsynth/rpExtractSink/compare/6.8.0...6.8.1)
+
+**Merged pull requests:**
+
+- style\(rpextractsink/extract\_sink.py\): rm comment [\#4](https://github.com/brsynth/rpExtractSink/pull/4) ([breakthewall](https://github.com/breakthewall))
 
 ## [6.8.0](https://github.com/brsynth/rpExtractSink/tree/6.8.0) (2026-03-26)
 
